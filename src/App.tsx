@@ -1,7 +1,8 @@
 import React from "react";
 import { RouterHelper, TeamsThemeHelper, AuthHelper } from "./helpers";
-import { Provider, ThemePrepared } from "@fluentui/react-northstar";
+import { ThemePrepared } from "@fluentui/react-northstar";
 import * as msTeams from "@microsoft/teams-js";
+import { ThemeProvider } from "react-bootstrap";
 
 export default class App extends React.Component<IAppProps, IAppState> {
   constructor(props: IAppProps) {
@@ -21,13 +22,13 @@ export default class App extends React.Component<IAppProps, IAppState> {
 
   render() {
     return (
-      <Provider theme={this.state.theme}>
+      <ThemeProvider theme={this.state.theme}>
         {this.state.loggedIn ? (
           <RouterHelper.AuthenticatedRoutes />
         ) : (
           <RouterHelper.UnauthenticatedRoutes />
         )}
-      </Provider>
+      </ThemeProvider>
     );
   }
 
