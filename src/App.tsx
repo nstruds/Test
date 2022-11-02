@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { RouterHelper, TeamsThemeHelper, AuthHelper } from "./helpers";
+import { Provider, ThemePrepared } from "@fluentui/react-northstar";
+import * as msTeams from "@microsoft/teams-js";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends React.Component<IAppProps, IAppState> {
+  constructor(props: IAppProps) {
+    super(props);
+
+    this.state = {
+      theme: TeamsThemeHelper.getTheme("default"),
+      loggedIn: AuthHelper.IsUserLoggedIn(),
+    };
+
+    msTeams.app.initialize();
+    msTeams.app.registerOnThemeChangeHandler(this.updateTheme.bind(this));
+    msTeams.app.getContext().then((context) => {
+      this.updateTheme(context.app.theme);
+    });
+  }
+
+  render() {
+    return (
+      <Provider theme={this.state.theme}>
+        {this.state.loggedIn ? (
+          <RouterHelper.AuthenticatedRoutes />
+        ) : (
+          <RouterHelper.UnauthenticatedRoutes />
+        )}
+      </Provider>
+    );
+  }
+
+  private updateTheme(themeString: string | undefined): void {
+    this.setState({
+      theme: TeamsThemeHelper.getTheme(themeString),
+    });
+  }
 }
 
-export default App;
+interface IAppProps {}
+
+interface IAppState {
+  theme: ThemePrepared;
+  loggedIn: boolean;
+}
