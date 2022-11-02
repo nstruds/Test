@@ -5,7 +5,7 @@ export const TeamsThemes = {
 };
 
 export const Auth = {
-  appId: process.env.APP_ID!,
+  appId: "ddc48e54-2d94-4959-a0ed-3d7034b66ed7",
   cacheLocation: "localStorage",
   signInStartPage: "auth/signinstart",
   signInEndPage: "auth/signinend",
